@@ -7,22 +7,18 @@ import com.example.library.Papper
 
 class Scaner(private val items: MutableList<Library>) {
     fun toCd(item: Library) {
-        when (item) {
-            is Book -> bookToCd(item)
-            is Papper -> papperToCd(item)
+        if (item is Book || item is Papper) {
+            val digitalCd = Disk(
+                id = item.id,
+                isAvailible = true,
+                name = "Оцифрованная копия: ${item.name}",
+                typeDisk = "CD",
+            )
+
+            items.add(digitalCd)
+            println("Оцифровка '${item.name}' на CD-диск завершена.")
+        } else {
+            println("Невозможно оцифровать этот тип объекта.")
         }
-    }
-
-    private fun bookToCd(book: Book) {
-        val digitalCd = Disk(book.id,true,"Оцифрованная копия: ${book.name}", "CD")
-
-        items.add(digitalCd)
-        println("Оцифровка книги '${book.name}' на CD-диск завершена.")
-    }
-
-    private fun papperToCd(papper: Papper) {
-        val digitalCd = Disk(papper.id, true,  "Оцифрованная копия: ${papper.name}", "CD")
-        items.add(digitalCd)
-        println("Оцифровка газеты '${papper.name}' на CD-диск завершена.")
     }
 }

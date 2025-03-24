@@ -7,25 +7,25 @@ class Book(
     id: Int,
     isAvailable: Boolean,
     name: String,
-    val countPages: Int,
-    val nameAuthor: String
-): Library(id, isAvailable, name), Takable, Readable {
+    private val countPages: Int,
+    private val nameAuthor: String
+) : Library(id, isAvailable, name), Takable, Readable {
 
     override fun takeHome() {
         if (isAvailable) {
             isAvailable = false
-            println("Вы взяли домой ${name} с id: ${id} взяли домой")
+            println("Вы взяли домой $name с id: $id взяли домой")
         } else {
-            println("${name} с id: ${id} уже забрали. Невозможно выполнить действие.")
+            println("$name с id: $id уже забрали. Невозможно выполнить действие.")
         }
     }
 
     override fun readInLibrary() {
         if (isAvailable) {
             isAvailable = false
-            println("Вы взяли почитать ${name} с id: ${id} в библиотеке")
+            println("Вы взяли почитать $name с id: $id в библиотеке")
         } else {
-            println("${name} с id: ${id} уже забрали. Невозможно выполнить действие.")
+            println("$name с id: $id уже забрали. Невозможно выполнить действие.")
         }
 
     }

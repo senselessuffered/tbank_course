@@ -1,6 +1,5 @@
 package com.example.library
 
-import Manager
 import com.example.library.com.example.library.Takable
 import com.example.library.com.example.library.Readable
 import com.example.library.com.example.library.BookShop
@@ -56,9 +55,9 @@ class ConsoleTools(private val items: MutableList<Library>) {
             println(shops)
             val task = readlnOrNull()?.toIntOrNull()
             product = when (task) {
-                1 -> manager.buyBook(bookShop)
-                2 -> manager.buyPapper(paperShop)
-                3 -> manager.buyDisk(diskShop)
+                1 -> manager.buy(bookShop)
+                2 -> manager.buy(paperShop)
+                3 -> manager.buy(diskShop)
                 0 -> return
                 else -> {
                     println("Некорректный ввод, попробуйте снова.")
@@ -66,7 +65,7 @@ class ConsoleTools(private val items: MutableList<Library>) {
                 }
             }
             println("Вы купили ${product.name} с id: ${product.id}")
-            }
+        }
     }
 
     // Универсальный метод для показа списка объектов
@@ -121,6 +120,7 @@ class ConsoleTools(private val items: MutableList<Library>) {
                         println("Невозможно выполнить действие.")
                     }
                 }
+
                 2 -> {
                     if (item is Readable) {
                         item.readInLibrary()
@@ -129,11 +129,13 @@ class ConsoleTools(private val items: MutableList<Library>) {
                         println("Невозможно выполнить действие")
                     }
                 }
+
                 3 -> item.showDetailedInfo()
                 4 -> {
                     returnObject(item)
                     item.showShortInfo()
                 }
+
                 5 -> {
                     if ((item is Papper || item is Book) && item.isAvailable) {
                         val scaner = Scaner(items)
@@ -142,6 +144,7 @@ class ConsoleTools(private val items: MutableList<Library>) {
                         println("Невозможно выполнить действие")
                     }
                 }
+
                 0 -> return
                 else -> println("Некорректный ввод, попробуйте снова.")
             }

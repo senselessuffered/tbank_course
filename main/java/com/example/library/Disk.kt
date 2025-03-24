@@ -7,14 +7,14 @@ class Disk(
     isAvailible: Boolean,
     name: String,
     val typeDisk: String,
-): Library(id, isAvailible, name), Takable {
+) : Library(id, isAvailible, name), Takable {
 
     override fun takeHome() {
         if (isAvailable) {
             isAvailable = false
-            println("Вы взяли домой ${name} с id: ${id} взяли домой")
+            println("Вы взяли домой $name с id: $id взяли домой")
         } else {
-            println("${name} с id: ${id} уже забрали. Невозможно выполнить действие.")
+            println("$name с id: $id уже забрали. Невозможно выполнить действие.")
         }
     }
 

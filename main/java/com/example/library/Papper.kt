@@ -1,21 +1,22 @@
 package com.example.library
 
+import com.example.library.com.example.library.Months
 import com.example.library.com.example.library.Readable
 
-class Papper (
+class Papper(
     id: Int,
     isAvailable: Boolean,
     name: String,
-    val month: String,
-    val papper_number: Int
-): Library(id, isAvailable, name), Readable{
+    private val month: Int,
+    private val papperNumber: Int
+) : Library(id, isAvailable, name), Readable {
 
     override fun readInLibrary() {
         if (isAvailable) {
             isAvailable = false
-            println("Вы взяли почитать ${name} с id: ${id} в библиотеке")
+            println("Вы взяли почитать $name с id: $id в библиотеке")
         } else {
-            println("${name} с id: ${id} уже забрали. Невозможно выполнить действие.")
+            println("$name с id: $id уже забрали. Невозможно выполнить действие.")
         }
 
     }
@@ -25,6 +26,7 @@ class Papper (
     }
 
     override fun showDetailedInfo() {
-        println("выпуск: $papper_number месяц: $month газеты $name с id: $id доступен: ${if (isAvailable) "Да" else "Нет"}")
+        val monthName = Months.entries.firstOrNull { it.numberOfMonth == month }?.nameOfMonths
+        println("выпуск: $papperNumber месяц: $monthName газеты $name с id: $id доступен: ${if (isAvailable) "Да" else "Нет"}")
     }
 }
