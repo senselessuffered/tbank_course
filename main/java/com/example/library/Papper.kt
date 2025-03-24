@@ -7,7 +7,7 @@ class Papper(
     id: Int,
     isAvailable: Boolean,
     name: String,
-    private val month: Int,
+    private val month: Months,
     private val papperNumber: Int
 ) : Library(id, isAvailable, name), Readable {
 
@@ -26,7 +26,6 @@ class Papper(
     }
 
     override fun showDetailedInfo() {
-        val monthName = Months.entries.firstOrNull { it.numberOfMonth == month }?.nameOfMonths
-        println("выпуск: $papperNumber месяц: $monthName газеты $name с id: $id доступен: ${if (isAvailable) "Да" else "Нет"}")
+        println("выпуск: $papperNumber месяц: ${month.nameOfMonths} газеты $name с id: $id доступен: ${if (isAvailable) "Да" else "Нет"}")
     }
 }

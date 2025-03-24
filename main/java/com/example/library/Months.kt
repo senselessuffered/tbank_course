@@ -1,16 +1,16 @@
 package com.example.library.com.example.library
 
-enum class Months(val numberOfMonth: Int, val nameOfMonths: String) {
-    JANUARY(1, "Январь"),
-    FEBRUARY(2, "Февраль"),
-    MARCH(3, "Март"),
-    APRIL(4, "Апрель"),
-    MAY(5, "Май"),
-    JUNE(6, "Июнь"),
-    JULY(7, "Июль"),
-    AUGUST(8, "Август"),
-    SEPTEMBER(9, "Сентябрь"),
-    OCTOBER(10, "Октябрь"),
-    NOVEMBER(11, "Ноябрь"),
-    DECEMBER(12, "Декабрь"),
+enum class Months(val nameOfMonths: String) {
+    JANUARY("Январь"),
+    FEBRUARY("Февраль"),
+    MARCH("Март"),
+    APRIL("Апрель"),
+    MAY("Май"),
+    JUNE("Июнь"),
+    JULY("Июль"),
+    AUGUST("Август"),
+    SEPTEMBER("Сентябрь"),
+    OCTOBER("Октябрь"),
+    NOVEMBER("Ноябрь"),
+    DECEMBER("Декабрь"),
 }

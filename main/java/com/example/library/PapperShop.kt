@@ -4,6 +4,6 @@ import com.example.library.Papper
 
 class PapperShop : Shop {
     override fun sale(): Papper {
-        return Papper(28, true, "Роботы", 7, 505)
+        return Papper(28, true, "Роботы", Months.FEBRUARY, 505)
     }
 }
