@@ -1,13 +1,11 @@
 package com.example.library
 
-open class Library(
+abstract class Library(
     val id: Int,
     var isAvailable: Boolean,
     val name: String,
 ) {
-    open fun showShortInfo() {
-        println("$name доступна: ${if (isAvailable) "Да" else "Нет"}")
-    }
+    abstract fun showShortInfo()
 
-    open fun showDetailedInfo() {}
+    abstract fun showInfo(): String
 }

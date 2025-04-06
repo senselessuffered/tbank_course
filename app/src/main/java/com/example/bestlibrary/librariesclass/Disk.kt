@@ -22,7 +22,7 @@ class Disk(
         println("$typeDisk $name доступен: ${if (isAvailable) "Да" else "Нет"}")
     }
 
-    override fun showDetailedInfo() {
-        println("$typeDisk $name доступен: ${if (isAvailable) "Да" else "Нет"}")
+    override fun showInfo(): String {
+        return "$typeDisk $name доступен: ${if (isAvailable) "Да" else "Нет"}"
     }
 }
