@@ -1,4 +1,4 @@
-package com.example.bestlibrary
+package com.example.bestlibrary.homescreen
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.bestlibrary.R
 import com.example.library.Library
 
 class LibraryAdapter(
@@ -51,4 +52,3 @@ class LibraryAdapter(
         }
     }
 }
-
