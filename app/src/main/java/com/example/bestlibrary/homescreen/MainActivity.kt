@@ -1,13 +1,17 @@
-package com.example.bestlibrary
+package com.example.bestlibrary.homescreen
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.bestlibrary.databinding.ActivityMainBinding
-import com.example.library.*
+import com.example.bestlibrary.infoscreen.InfoActivity
+import com.example.library.Book
+import com.example.library.Disk
+import com.example.library.Papper
 import com.example.library.com.example.library.Months
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,15 +32,35 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         libraryAdapter = LibraryAdapter(items) { item ->
-            item.isAvailable = !item.isAvailable
-            Toast.makeText(this, "Элемент с id: ${item.id}", Toast.LENGTH_SHORT).show()
-            libraryAdapter.notifyDataSetChanged()
+            val intent = Intent(this, InfoActivity::class.java)
+            intent.putExtra("info", item.showInfo())
+            intent.putExtra("id", item.id)
+            startActivity(intent)
         }
+
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = libraryAdapter
+
+        val itemTouchHelper = ItemTouchHelper(object :
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                libraryAdapter.removeItem(position)
+            }
+        })
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
 }

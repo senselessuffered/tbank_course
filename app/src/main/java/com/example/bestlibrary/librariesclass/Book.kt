@@ -34,7 +34,7 @@ class Book(
         println("$name доступна: ${if (isAvailable) "Да" else "Нет"}")
     }
 
-    override fun showDetailedInfo() {
-        println("книга: $name (${countPages} стр.) автора: ${nameAuthor}author с id: $id доступна: ${if (isAvailable) "Да" else "Нет"}")
+    override fun showInfo(): String {
+        return "книга: $name (${countPages} стр.) автора: ${nameAuthor}author с id: $id доступна: ${if (isAvailable) "Да" else "Нет"}"
     }
 }

@@ -25,7 +25,7 @@ class Papper(
         println("$name доступна: ${if (isAvailable) "Да" else "Нет"}")
     }
 
-    override fun showDetailedInfo() {
-        println("выпуск: $papperNumber месяц: ${month.nameOfMonths} газеты $name с id: $id доступен: ${if (isAvailable) "Да" else "Нет"}")
+    override fun showInfo(): String {
+        return "выпуск: $papperNumber месяц: ${month.nameOfMonths} газеты $name с id: $id доступен: ${if (isAvailable) "Да" else "Нет"}"
     }
 }
