@@ -13,17 +13,14 @@
         android:theme="@style/Theme.BestLibrary"
         tools:targetApi="31">
         <activity
-            android:name=".infoscreen.InfoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".homescreen.MainActivity"
+            android:name="com.example.bestlibrary.librariesclass.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
