@@ -5,13 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bestlibrary.databinding.FragmentLibraryListBinding
 import com.example.bestlibrary.librariesclass.adapters.LibraryAdapter
 import com.example.bestlibrary.librariesclass.data.LibraryRepository
 import com.example.library.Library
-
+import kotlinx.coroutines.launch
 
 class LibraryListFragment : Fragment() {
 
@@ -44,9 +46,22 @@ class LibraryListFragment : Fragment() {
         val layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.layoutManager = layoutManager
 
-        adapter = LibraryAdapter(LibraryRepository.getItems() as MutableList) { item ->
-            listener?.onLibraryItemClick(item)
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val items = LibraryRepository.getItems()
+                adapter = LibraryAdapter(items.toMutableList()) { item ->
+                    listener?.onLibraryItemClick(item)
+                }
+                binding.recyclerView.adapter = adapter
+            } catch (e: Exception) {
+                Toast.makeText(
+                    requireContext(),
+                    "Ошибка при загрузке данных: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
+
 
         binding.recyclerView.adapter = adapter
 

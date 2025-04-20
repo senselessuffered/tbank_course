@@ -5,6 +5,7 @@ import com.example.library.Disk
 import com.example.library.Library
 import com.example.library.Papper
 import com.example.library.com.example.library.Months
+import kotlinx.coroutines.delay
 
 object LibraryRepository {
     private val items = mutableListOf(
@@ -19,12 +20,28 @@ object LibraryRepository {
         Disk(33, false, "Ледниковый период 3", "CD")
     )
     private var nextId = (items.maxOfOrNull { it.id } ?: 0) + 1
+    private var errorCounter = 0
+    private var accessCount = 0
 
-    fun getItems(): List<Library> = items
+    suspend fun getItems(): List<Library> {
+        delay((100..2000).random().toLong())
+        errorCounter++
+        if (errorCounter % 5 == 0) throw Exception("Ошибка загрузки данных из репозитория")
+        return items.toList()
+    }
 
-    fun addItem(item: Library) {
+    suspend fun addItem(item: Library) {
+        simulateDelayAndPossibleError("Ошибка при добавлении элемента")
         items.add(item)
     }
 
     fun getNextId(): Int = nextId++
+
+    private suspend fun simulateDelayAndPossibleError(errorMessage: String) {
+        delay((100..2000).random().toLong())
+        accessCount++
+        if (accessCount % 5 == 0) {
+            throw Exception(errorMessage)
+        }
+    }
 }

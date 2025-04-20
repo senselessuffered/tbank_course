@@ -3,9 +3,15 @@ package com.example.bestlibrary.librariesclass.adapters
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bestlibrary.databinding.ItemLibraryBinding
 import com.example.library.Library
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class LibraryAdapter(
     internal val items: List<Library>,
@@ -34,7 +40,20 @@ class LibraryAdapter(
         holder.binding.textViewAvailable.text =
             "Id: ${item.id} - ${if (item.isAvailable) "Доступно" else "Занято"}"
         holder.binding.root.setOnClickListener {
-            onClick(item)
+            CoroutineScope(Dispatchers.Main).launch {
+                delay((500..1500).random().toLong())
+                val err = Random.nextInt(4) == 0
+
+                if (err) {
+                    Toast.makeText(
+                        holder.itemView.context,
+                        "Ошибка при открытии",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    onClick(item)
+                }
+            }
         }
     }
 
