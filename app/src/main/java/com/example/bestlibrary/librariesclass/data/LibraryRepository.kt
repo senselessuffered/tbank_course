@@ -18,7 +18,7 @@ object LibraryRepository {
         Disk(32, true, "Мистер робот", "CD"),
         Disk(33, false, "Ледниковый период 3", "CD")
     )
-    private var nextId = 1
+    private var nextId = (items.maxOfOrNull { it.id } ?: 0) + 1
 
     fun getItems(): List<Library> = items
 

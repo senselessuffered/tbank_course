@@ -39,23 +39,26 @@ class LibraryListFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.layoutManager = layoutManager
 
-        adapter = LibraryAdapter(LibraryRepository.getItems()) { item ->
+        adapter = LibraryAdapter(LibraryRepository.getItems() as MutableList) { item ->
             listener?.onLibraryItemClick(item)
         }
 
         binding.recyclerView.adapter = adapter
 
-        // Кнопка "добавить"
         binding.fabAdd.setOnClickListener {
             listener?.onAddNewItem()
         }
 
-        // Восстановим позицию скролла
         binding.recyclerView.scrollToPosition(scrollPosition)
+
+        parentFragmentManager.setFragmentResultListener("item_added", viewLifecycleOwner) { _, _ ->
+            addLastItemAndScroll()
+        }
     }
 
     override fun onPause() {
@@ -67,6 +70,12 @@ class LibraryListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun addLastItemAndScroll() {
+        val position = adapter.itemCount - 1
+        adapter.notifyItemInserted(position)
+        binding.recyclerView.scrollToPosition(position)
     }
 
     interface OnLibraryItemClickListener {

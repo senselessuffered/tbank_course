@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.example.bestlibrary.R
 import com.example.bestlibrary.databinding.FragmentLibraryDetailBinding
-import com.example.bestlibrary.librariesclass.adapters.LibraryAdapter
 import com.example.bestlibrary.librariesclass.data.LibraryRepository
 import com.example.library.Book
 import com.example.library.Disk
@@ -16,6 +15,8 @@ import com.example.library.Library
 import com.example.library.Papper
 import com.example.library.com.example.library.Months
 
+
+@Suppress("DEPRECATION")
 class LibraryDetailFragment : Fragment() {
 
     private var _binding: FragmentLibraryDetailBinding? = null
@@ -102,12 +103,9 @@ class LibraryDetailFragment : Fragment() {
             }
 
             LibraryRepository.addItem(newItem)
-            val adapterL = LibraryAdapter(LibraryRepository.getItems()) { item -> }
-            // recyclerView.adapter = adapterL
-            adapterL.notifyDataSetChanged()
+            parentFragmentManager.setFragmentResult("item_added", Bundle())
             requireActivity().supportFragmentManager.popBackStack()
 
-            requireActivity().supportFragmentManager.popBackStack()
         }
     }
 

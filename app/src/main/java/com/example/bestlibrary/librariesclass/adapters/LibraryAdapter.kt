@@ -1,5 +1,6 @@
 package com.example.bestlibrary.librariesclass.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -7,7 +8,7 @@ import com.example.bestlibrary.databinding.ItemLibraryBinding
 import com.example.library.Library
 
 class LibraryAdapter(
-    private val items: List<Library>,
+    internal val items: List<Library>,
     private val onClick: (Library) -> Unit
 ) : RecyclerView.Adapter<LibraryAdapter.LibraryViewHolder>() {
 
@@ -19,10 +20,19 @@ class LibraryAdapter(
         return LibraryViewHolder(binding)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
         val item = items[position]
+        holder.binding.imageViewIcon.setImageResource(
+            holder.itemView.context.resources.getIdentifier(
+                item::class.simpleName?.lowercase(),
+                "drawable",
+                holder.itemView.context.packageName
+            )
+        )
         holder.binding.textViewName.text = item.name
-        holder.binding.textViewAvailable.text = if (item.isAvailable) "Доступно" else "Занято"
+        holder.binding.textViewAvailable.text =
+            "Id: ${item.id} - ${if (item.isAvailable) "Доступно" else "Занято"}"
         holder.binding.root.setOnClickListener {
             onClick(item)
         }

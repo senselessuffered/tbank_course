@@ -1,5 +1,6 @@
 package com.example.bestlibrary.librariesclass
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
@@ -16,17 +17,17 @@ class MainActivity : AppCompatActivity(), LibraryListFragment.OnLibraryItemClick
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        isLandscape = binding.detailContainer != null
+        isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {
                 replace(R.id.list_container, LibraryListFragment())
             }
         }
+
     }
 
     override fun onLibraryItemClick(item: Library) {
