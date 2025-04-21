@@ -118,8 +118,7 @@ class LibraryDetailFragment : Fragment() {
                     ).show()
                 }
             }
-            parentFragmentManager.setFragmentResult("item_added", Bundle())
-            requireActivity().supportFragmentManager.popBackStack()
+
 
         }
     }

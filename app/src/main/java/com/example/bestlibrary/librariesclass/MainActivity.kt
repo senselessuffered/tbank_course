@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity(), LibraryListFragment.OnLibraryItemClick
                 replace(R.id.list_container, LibraryListFragment())
             }
         }
-
     }
 
     override fun onLibraryItemClick(item: Library) {
@@ -47,6 +46,7 @@ class MainActivity : AppCompatActivity(), LibraryListFragment.OnLibraryItemClick
 
     override fun onAddNewItem() {
         val detailFragment = LibraryDetailFragment.newInstance(null)
+
         if (isLandscape) {
             supportFragmentManager.commit {
                 replace(R.id.detail_container, detailFragment)

@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class LibraryAdapter(
-    internal val items: List<Library>,
+    internal val items: MutableList<Library>,
     private val onClick: (Library) -> Unit
 ) : RecyclerView.Adapter<LibraryAdapter.LibraryViewHolder>() {
 
@@ -29,6 +29,8 @@ class LibraryAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
         val item = items[position]
+        holder.itemView.alpha = if (item.isAvailable) 1.0f else 0.3f
+        holder.itemView.elevation = if (item.isAvailable) 8f else 2f
         holder.binding.imageViewIcon.setImageResource(
             holder.itemView.context.resources.getIdentifier(
                 item::class.simpleName?.lowercase(),
@@ -58,4 +60,11 @@ class LibraryAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun removeItem(position: Int) {
+        if (position in items.indices) {
+            items.removeAt(position)
+            notifyItemRemoved(position)
+        }
+    }
 }
