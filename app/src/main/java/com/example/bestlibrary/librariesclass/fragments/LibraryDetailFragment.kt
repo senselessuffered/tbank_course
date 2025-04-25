@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.bestlibrary.R
 import com.example.bestlibrary.databinding.FragmentLibraryDetailBinding
 import com.example.bestlibrary.librariesclass.data.LibraryRepository
@@ -14,7 +16,7 @@ import com.example.library.Disk
 import com.example.library.Library
 import com.example.library.Papper
 import com.example.library.com.example.library.Months
-
+import kotlinx.coroutines.launch
 
 @Suppress("DEPRECATION")
 class LibraryDetailFragment : Fragment() {
@@ -102,9 +104,21 @@ class LibraryDetailFragment : Fragment() {
                 )
             }
 
-            LibraryRepository.addItem(newItem)
-            parentFragmentManager.setFragmentResult("item_added", Bundle())
-            requireActivity().supportFragmentManager.popBackStack()
+            viewLifecycleOwner.lifecycleScope.launch {
+                try {
+                    LibraryRepository.addItem(newItem)
+
+                    parentFragmentManager.setFragmentResult("item_added", Bundle())
+                    requireActivity().supportFragmentManager.popBackStack()
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Ошибка при добавлении: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
 
         }
     }

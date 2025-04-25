@@ -3,12 +3,18 @@ package com.example.bestlibrary.librariesclass.adapters
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bestlibrary.databinding.ItemLibraryBinding
 import com.example.library.Library
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class LibraryAdapter(
-    internal val items: List<Library>,
+    internal val items: MutableList<Library>,
     private val onClick: (Library) -> Unit
 ) : RecyclerView.Adapter<LibraryAdapter.LibraryViewHolder>() {
 
@@ -23,6 +29,8 @@ class LibraryAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
         val item = items[position]
+        holder.itemView.alpha = if (item.isAvailable) 1.0f else 0.3f
+        holder.itemView.elevation = if (item.isAvailable) 8f else 2f
         holder.binding.imageViewIcon.setImageResource(
             holder.itemView.context.resources.getIdentifier(
                 item::class.simpleName?.lowercase(),
@@ -34,9 +42,29 @@ class LibraryAdapter(
         holder.binding.textViewAvailable.text =
             "Id: ${item.id} - ${if (item.isAvailable) "Доступно" else "Занято"}"
         holder.binding.root.setOnClickListener {
-            onClick(item)
+            CoroutineScope(Dispatchers.Main).launch {
+                delay((500..1500).random().toLong())
+                val err = Random.nextInt(4) == 0
+
+                if (err) {
+                    Toast.makeText(
+                        holder.itemView.context,
+                        "Ошибка при открытии",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    onClick(item)
+                }
+            }
         }
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun removeItem(position: Int) {
+        if (position in items.indices) {
+            items.removeAt(position)
+            notifyItemRemoved(position)
+        }
+    }
 }

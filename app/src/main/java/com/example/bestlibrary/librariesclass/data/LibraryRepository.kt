@@ -5,6 +5,7 @@ import com.example.library.Disk
 import com.example.library.Library
 import com.example.library.Papper
 import com.example.library.com.example.library.Months
+import kotlinx.coroutines.delay
 
 object LibraryRepository {
     private val items = mutableListOf(
@@ -22,7 +23,8 @@ object LibraryRepository {
 
     fun getItems(): List<Library> = items
 
-    fun addItem(item: Library) {
+    suspend fun addItem(item: Library) {
+        delay(1500)
         items.add(item)
     }
 
