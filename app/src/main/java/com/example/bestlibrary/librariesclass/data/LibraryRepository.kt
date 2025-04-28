@@ -1,32 +1,24 @@
 package com.example.bestlibrary.librariesclass.data
 
-import com.example.library.Book
-import com.example.library.Disk
-import com.example.library.Library
-import com.example.library.Papper
-import com.example.library.com.example.library.Months
-import kotlinx.coroutines.delay
+import android.content.Context
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-object LibraryRepository {
-    private val items = mutableListOf(
-        Book(11, false, "Java: руководство для начинающих", 234, "Герберт Шилдт"),
-        Book(12, false, "Язык программирования Си", 1001, "Брайан Керниган и Деннис Ритчи"),
-        Book(13, true, "Триумфальная арка", 591, "Эрих Мария Ремарк"),
-        Papper(21, false, "Любовь", Months.JANUARY, 314),
-        Papper(22, true, "Смерть", Months.MAY, 404),
-        Papper(23, true, "Роботы", Months.AUGUST, 505),
-        Disk(31, true, "Город астероидов", "DVD"),
-        Disk(32, true, "Мистер робот", "CD"),
-        Disk(33, false, "Ледниковый период 3", "CD")
-    )
-    private var nextId = (items.maxOfOrNull { it.id } ?: 0) + 1
+class LibraryRepository(context: Context) {
+    private val dao = AppDatabase.getInstance(context).libraryDao()
 
-    fun getItems(): List<Library> = items
+    suspend fun getPage(sortBy: String, limit: Int, offset: Int): List<LibraryEntity> =
+        withContext(Dispatchers.IO) {
+            dao.loadPage(sortBy, limit, offset)
+        }
 
-    suspend fun addItem(item: Library) {
-        delay(1500)
-        items.add(item)
-    }
+    suspend fun add(item: LibraryEntity) =
+        withContext(Dispatchers.IO) {
+            dao.insert(item)
+        }
 
-    fun getNextId(): Int = nextId++
+    suspend fun delete(item: LibraryEntity) =
+        withContext(Dispatchers.IO) {
+            dao.delete(item)
+        }
 }
