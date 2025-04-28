@@ -1,7 +1,4 @@
-package com.example.library
-
-import com.example.library.com.example.library.Readable
-import com.example.library.com.example.library.Takable
+package com.example.bestlibrary.librariesclass.models
 
 class Book(
     id: Int,

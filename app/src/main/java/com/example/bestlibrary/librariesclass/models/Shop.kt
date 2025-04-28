@@ -1,6 +1,4 @@
-package com.example.library.com.example.library
-
-import com.example.library.Library
+package com.example.bestlibrary.librariesclass.models
 
 interface Shop {
     fun sale(): Library

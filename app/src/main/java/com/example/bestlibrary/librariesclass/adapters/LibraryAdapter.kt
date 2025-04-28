@@ -3,68 +3,69 @@ package com.example.bestlibrary.librariesclass.adapters
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.bestlibrary.R
 import com.example.bestlibrary.databinding.ItemLibraryBinding
-import com.example.library.Library
+import com.example.bestlibrary.librariesclass.data.LibraryEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 class LibraryAdapter(
-    internal val items: MutableList<Library>,
-    private val onClick: (Library) -> Unit
-) : RecyclerView.Adapter<LibraryAdapter.LibraryViewHolder>() {
+    internal val items: MutableList<LibraryEntity>,
+    private val onClick: (LibraryEntity) -> Unit
+) : RecyclerView.Adapter<LibraryAdapter.VH>() {
 
-    inner class LibraryViewHolder(val binding: ItemLibraryBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    inner class VH(val vb: ItemLibraryBinding) : RecyclerView.ViewHolder(vb.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LibraryViewHolder {
-        val binding = ItemLibraryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return LibraryViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+        val vb = ItemLibraryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return VH(vb)
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: LibraryViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: VH, position: Int) {
         val item = items[position]
-        holder.itemView.alpha = if (item.isAvailable) 1.0f else 0.3f
-        holder.itemView.elevation = if (item.isAvailable) 8f else 2f
-        holder.binding.imageViewIcon.setImageResource(
-            holder.itemView.context.resources.getIdentifier(
-                item::class.simpleName?.lowercase(),
-                "drawable",
-                holder.itemView.context.packageName
-            )
-        )
-        holder.binding.textViewName.text = item.name
-        holder.binding.textViewAvailable.text =
-            "Id: ${item.id} - ${if (item.isAvailable) "Доступно" else "Занято"}"
-        holder.binding.root.setOnClickListener {
-            CoroutineScope(Dispatchers.Main).launch {
-                delay((500..1500).random().toLong())
-                val err = Random.nextInt(4) == 0
+        with(holder.vb) {
+            root.alpha = if (item.isAvailable) 1f else 0.3f
+            textViewName.text = item.name
+            textViewAvailable.text =
+                "Id: ${item.id} — ${if (item.isAvailable) "Доступно" else "Занято"}"
 
-                if (err) {
-                    Toast.makeText(
-                        holder.itemView.context,
-                        "Ошибка при открытии",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
+            val iconRes = when (item.type) {
+                "Книга" -> R.drawable.book
+                "Диск" -> R.drawable.disk
+                "Газета" -> R.drawable.papper
+                else -> R.drawable.ic_launcher_foreground
+            }
+            imageViewIcon.setImageResource(iconRes)
+
+            root.setOnClickListener {
+                CoroutineScope(Dispatchers.Main).launch {
                     onClick(item)
                 }
             }
         }
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount() = items.size
 
     fun removeItem(position: Int) {
         if (position in items.indices) {
             items.removeAt(position)
             notifyItemRemoved(position)
         }
+    }
+
+    fun addAll(list: List<LibraryEntity>) {
+        val s = items.size
+        items.addAll(list)
+        notifyItemRangeInserted(s, list.size)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun clear() {
+        items.clear()
+        notifyDataSetChanged()
     }
 }

@@ -1,4 +1,4 @@
-package com.example.library.com.example.library
+package com.example.bestlibrary.librariesclass.models
 
 enum class Months(val nameOfMonths: String) {
     JANUARY("Январь"),

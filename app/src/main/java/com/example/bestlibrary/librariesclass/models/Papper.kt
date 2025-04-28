@@ -1,7 +1,4 @@
-package com.example.library
-
-import com.example.library.com.example.library.Months
-import com.example.library.com.example.library.Readable
+package com.example.bestlibrary.librariesclass.models
 
 class Papper(
     id: Int,
