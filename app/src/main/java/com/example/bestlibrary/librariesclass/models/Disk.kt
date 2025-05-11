@@ -1,6 +1,4 @@
-package com.example.library
-
-import com.example.library.com.example.library.Takable
+package com.example.bestlibrary.librariesclass.models
 
 class Disk(
     id: Int,

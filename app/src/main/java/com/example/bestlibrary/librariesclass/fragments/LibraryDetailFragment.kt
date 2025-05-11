@@ -1,5 +1,6 @@
 package com.example.bestlibrary.librariesclass.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,123 +9,76 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.bestlibrary.R
 import com.example.bestlibrary.databinding.FragmentLibraryDetailBinding
+import com.example.bestlibrary.librariesclass.data.LibraryEntity
 import com.example.bestlibrary.librariesclass.data.LibraryRepository
-import com.example.library.Book
-import com.example.library.Disk
-import com.example.library.Library
-import com.example.library.Papper
-import com.example.library.com.example.library.Months
 import kotlinx.coroutines.launch
 
 @Suppress("DEPRECATION")
 class LibraryDetailFragment : Fragment() {
-
-    private var _binding: FragmentLibraryDetailBinding? = null
-    private val binding get() = _binding!!
-
-    private var item: Library? = null
+    private var _vb: FragmentLibraryDetailBinding? = null
+    private val vb get() = _vb!!
+    private var item: LibraryEntity? = null
+    private lateinit var repo: LibraryRepository
 
     companion object {
-        private const val ARG_ITEM = "arg_item"
-
-        fun newInstance(libraryItem: Library?): LibraryDetailFragment {
-            val fragment = LibraryDetailFragment()
-            val args = Bundle()
-            args.putSerializable(ARG_ITEM, libraryItem)
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        item = arguments?.getSerializable(ARG_ITEM) as? Library
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentLibraryDetailBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (item != null) {
-            showItemDetails()
-        } else {
-            showAddForm()
-        }
-    }
-
-    private fun showItemDetails() {
-        binding.groupDetails.visibility = View.VISIBLE
-        binding.groupAddForm.visibility = View.GONE
-
-        binding.textViewDetail.text = item!!.showInfo()
-    }
-
-    private fun showAddForm() {
-        binding.groupDetails.visibility = View.GONE
-        binding.groupAddForm.visibility = View.VISIBLE
-
-        val types = resources.getStringArray(R.array.types_array)
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, types)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerType.adapter = adapter
-
-        binding.buttonAdd.setOnClickListener {
-            val name = binding.editName.text.toString()
-            val type = binding.spinnerType.selectedItem.toString()
-
-            val newItem: Library = when (type) {
-                "Книга" -> Book(
-                    id = LibraryRepository.getNextId(),
-                    isAvailable = true,
-                    name = name,
-                    countPages = 100,
-                    nameAuthor = "Автор"
-                )
-
-                "Диск" -> Disk(
-                    id = LibraryRepository.getNextId(),
-                    isAvailible = true,
-                    name = name,
-                    typeDisk = "CD"
-                )
-
-                else -> Papper(
-                    id = LibraryRepository.getNextId(),
-                    isAvailable = true,
-                    name = name,
-                    month = Months.JANUARY,
-                    papperNumber = 1
-                )
+        private const val ARG = "arg_item"
+        fun newInstance(item: LibraryEntity?) =
+            LibraryDetailFragment().apply {
+                arguments = Bundle().apply { putSerializable(ARG, item) }
             }
+    }
 
-            viewLifecycleOwner.lifecycleScope.launch {
-                try {
-                    LibraryRepository.addItem(newItem)
+    override fun onCreateView(i: LayoutInflater, c: ViewGroup?, b: Bundle?) =
+        FragmentLibraryDetailBinding.inflate(i, c, false).also { _vb = it }.root
 
-                    parentFragmentManager.setFragmentResult("item_added", Bundle())
-                    requireActivity().supportFragmentManager.popBackStack()
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Ошибка при добавлении: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+    override fun onViewCreated(v: View, s: Bundle?) {
+        repo = LibraryRepository(requireContext())
+        item = arguments?.getSerializable(ARG) as? LibraryEntity
+        if (item != null) showDetails() else showForm()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun showDetails() {
+        vb.groupDetails.visibility = View.VISIBLE
+        vb.groupAddForm.visibility = View.GONE
+        vb.textViewDetail.text =
+            "${item!!.type}: ${item!!.name} — ${if (item!!.isAvailable) "Доступно" else "Занято"}"
+    }
+
+    private fun showForm() {
+        vb.groupDetails.visibility = View.GONE
+        vb.groupAddForm.visibility = View.VISIBLE
+        val types = listOf("Книга", "Диск", "Газета")
+        vb.spinnerType.adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, types)
+                .also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+
+        vb.buttonAdd.setOnClickListener {
+            val name = vb.editName.text.toString().trim()
+            if (name.isEmpty()) {
+                Toast.makeText(requireContext(), "Введите название", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
-
-
+            val type = vb.spinnerType.selectedItem as String
+            val id = (System.currentTimeMillis() % Int.MAX_VALUE).toInt()
+            val now = System.currentTimeMillis()
+            val extra = when (type) {
+                "Книга" -> "pages=100;author=Автор"
+                "Диск" -> "diskType=CD"
+                else -> "month=1;papperNumber=1"
+            }
+            val newItem = LibraryEntity(id, type, name, extra, now, true)
+            lifecycleScope.launch {
+                repo.add(newItem)
+                parentFragmentManager.setFragmentResult("item_added", Bundle())
+                requireActivity().supportFragmentManager.popBackStack()
+            }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        _vb = null
     }
 }

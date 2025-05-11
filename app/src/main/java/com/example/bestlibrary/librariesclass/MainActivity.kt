@@ -6,11 +6,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.example.bestlibrary.R
 import com.example.bestlibrary.databinding.ActivityMainBinding
+import com.example.bestlibrary.librariesclass.data.LibraryEntity
 import com.example.bestlibrary.librariesclass.fragments.LibraryDetailFragment
 import com.example.bestlibrary.librariesclass.fragments.LibraryListFragment
-import com.example.library.Library
 
-class MainActivity : AppCompatActivity(), LibraryListFragment.OnLibraryItemClickListener {
+class MainActivity : AppCompatActivity(),
+    LibraryListFragment.OnLibraryItemClickListener {
 
     private lateinit var binding: ActivityMainBinding
     private var isLandscape = false
@@ -29,31 +30,29 @@ class MainActivity : AppCompatActivity(), LibraryListFragment.OnLibraryItemClick
         }
     }
 
-    override fun onLibraryItemClick(item: Library) {
-        val detailFragment = LibraryDetailFragment.newInstance(item)
-
+    override fun onLibraryItemClick(item: LibraryEntity) {
+        val detail = LibraryDetailFragment.newInstance(item)
         if (isLandscape) {
             supportFragmentManager.commit {
-                replace(R.id.detail_container, detailFragment)
+                replace(R.id.detail_container, detail)
             }
         } else {
             supportFragmentManager.commit {
-                replace(R.id.list_container, detailFragment)
+                replace(R.id.list_container, detail)
                 addToBackStack(null)
             }
         }
     }
 
     override fun onAddNewItem() {
-        val detailFragment = LibraryDetailFragment.newInstance(null)
-
+        val detail = LibraryDetailFragment.newInstance(null)
         if (isLandscape) {
             supportFragmentManager.commit {
-                replace(R.id.detail_container, detailFragment)
+                replace(R.id.detail_container, detail)
             }
         } else {
             supportFragmentManager.commit {
-                replace(R.id.list_container, detailFragment)
+                replace(R.id.list_container, detail)
                 addToBackStack(null)
             }
         }
